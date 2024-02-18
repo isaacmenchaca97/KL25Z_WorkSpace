@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.nxp.mcuxpresso.core.datamodels.ui.wizards.SDKWizardPage">
+		<item value="false" key="Summary.visible"/>
+		<item value="714" key="Sash.Weight.Components"/>
+		<item value="285" key="Sash.Weight.Summary"/>
+	</section>
+</section>
