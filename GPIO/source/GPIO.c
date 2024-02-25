@@ -22,31 +22,12 @@
 // #define PULL_UP_BOTTON		0x103
 
 void delayMs(uint32_t n);
+void ledToggle(void);
+int sumaRecursiva(int n);
 
 int main(){
-
-	// 1.- configure the SCGC5_PORTB
-	uint32_t *pSimScgcENReg = (uint32_t*)(SCGC5_PORTB_ENR);
-	*pSimScgcENReg &= ~(1 << 10); //clear bit 10
-	*pSimScgcENReg |= (1 << 10);
-
-	// 2.- configure the PORTB_PCR19_ENR
-	 uint32_t *pPortbPcr19ENReg = (uint32_t*)(PORTB_PCR19_ENR);
-	 *pPortbPcr19ENReg &= ~(0x7 << 8); //mux PCR[19]
-	 *pPortbPcr19ENReg |= (0x1 << 8); //Alternative 1 (GPIO)
-
-	// 3.- configure the GPIOB_PDDR_ENR
-	uint32_t *pGpioBPddrENReg = (uint32_t)(GPIOB_PDDR_ENR);
-	*pGpioBPddrENReg |= (0x1 << 19); //set as output
-
-	uint32_t *pGpioBPtor = (uint32_t)(GPIOB_PTOR_ENR);
-
-	while (1)
-	{
-		*pGpioBPtor |= (0x1 << 19);
-		delayMs(50);
-	}
 	
+	sumaRecursiva(3);
 
 	// SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
 	// PORTB->PCR[19] |= PORT_PCR_MUX(1);
@@ -81,4 +62,34 @@ void delayMs(uint32_t n){
 	for(i=0 ;i<n ;i++)
 		for(j=0 ;j<7000 ;j++);
 
+}
+void ledToggle(void){
+	// 1.- configure the SCGC5_PORTB
+	uint32_t *pSimScgcENReg = (uint32_t*)(SCGC5_PORTB_ENR);
+	*pSimScgcENReg &= ~(1 << 10); //clear bit 10
+	*pSimScgcENReg |= (1 << 10);
+
+	// 2.- configure the PORTB_PCR19_ENR
+	uint32_t *pPortbPcr19ENReg = (uint32_t*)(PORTB_PCR19_ENR);
+	*pPortbPcr19ENReg &= ~(0x7 << 8); //mux PCR[19]
+	*pPortbPcr19ENReg |= (0x1 << 8); //Alternative 1 (GPIO)
+
+	// 3.- configure the GPIOB_PDDR_ENR
+	uint32_t *pGpioBPddrENReg = (uint32_t*)(GPIOB_PDDR_ENR);
+	*pGpioBPddrENReg |= (0x1 << 19); //set as output
+
+	uint32_t *pGpioBPtor = (uint32_t*)(GPIOB_PTOR_ENR);
+
+	while (1)
+	{
+		*pGpioBPtor |= (0x1 << 19);
+		delayMs(100);
+	}
+}
+int sumaRecursiva(int n) {
+    if (n == 0) {
+        return 0;
+    } else {
+        return n + sumaRecursiva(n-1);
+    }
 }
