@@ -94,8 +94,8 @@ void delayMs(uint32_t n){
 }
 void LCD_command(unsigned char command){
 	*pGpioaPcorENReg = RS|RW;		// RS=0, R/W=0
-	*pGpiodPdorENReg = command;
 	*pGpioaPsorENReg = EN;			// pulse E
+	*pGpiodPdorENReg = command;
 	delayMs(0);
 	*pGpioaPcorENReg = EN;
 	
@@ -107,8 +107,8 @@ void LCD_command(unsigned char command){
 void LCD_data(unsigned char data){
 	*pGpioaPsorENReg = RS;			// RS = 1, R/W = 0
 	*pGpioaPcorENReg = RW;
-	*pGpiodPdorENReg = data;
 	*pGpioaPsorENReg = EN;			// pulse E
+	*pGpiodPdorENReg = data;
 	delayMs(0);
 	*pGpioaPcorENReg = EN;
 	delayMs(1);
