@@ -170,15 +170,20 @@ void  LCD_init(void){
 	*pGpioaPddrENReg |= (0x34 << 0); 		// make PORTA 5, 4, 2 as output pins (0011 0100)
 
 	delayMs(30);   							// initialization sequence
-	LCD_command(0x30);
+	LCD_command(0x38);
 	delayMs(10);
-	LCD_command(0x30);
+	LCD_command(0x38);
+	delayMs(10);
+	LCD_command(0x38);
 	delayMs(1);
-	LCD_command(0x30);
-	LCD_command(0x38);						// set 8-bit data, 2-lin, 5x7 font
-	LCD_command(0x06);						// move cursor right
-	LCD_command(0x01);						// clear screen, move cursor to home
 	LCD_command(0x0F);						// turn on display, cursor blinking
+	delayMs(1);
+	LCD_command(0x01);						// clear screen, move cursor to home
+	delayMs(1);
+
+	// LCD_command(0x30);
+	// LCD_command(0x38);						// set 8-bit data, 2-lin, 5x7 font
+	// LCD_command(0x06);						// move cursor right
 }
 
 void ledToggle(void){
