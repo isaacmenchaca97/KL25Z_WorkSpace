@@ -169,6 +169,9 @@ void  LCD_init(void){
 	uint32_t *pGpioaPddrENReg = (uint32_t*)(GPIOA_PDDR_ENR);
 	*pGpioaPddrENReg |= (0x34 << 0); 		// make PORTA 5, 4, 2 as output pins (0011 0100)
 
+	*pGpioaPcorENReg = RS|RW;		// RS=0, R/W=0
+	*pGpioaPcorENReg = EN;			// pulse E
+
 	delayMs(30);   							// initialization sequence
 	LCD_command(0x38);
 	delayMs(10);
