@@ -8,13 +8,14 @@ int main (void) {
 	int i;
 	UART2_init();
 	while (1) {
-		for (i = 0; i < 6; i++) {
-			while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
-			UART2->D = message[i]; /* send a char */
-		}
+		// for (i = 0; i < 6; i++) {
+		// 	while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
+		// 	UART2->D = message[i]; /* send a char */
+		// }
 		while(!(UART2->S1 & 0x20)) {}   /* wait for receive buffer full */
 		c = UART2->D ; /* read the char received */
-		
+		printf("Switch: %c\n", c);
+
 		delayMs(10); /* leave a gap between messages */
 	}
 }
