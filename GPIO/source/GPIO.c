@@ -5,15 +5,23 @@ void LED_init(void);
 void LED_set(char value);
 
 int main (void) {
-	char c;
+	char message[] = "AT+START";
+	// char c;
+	int i;
 
 	LED_init();
 	UART2_init();
 
 	while (1) {
+		for (i = 0; i < 8; i++) {
+			while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
+			UART2->D = message[i]; /* send a char */
+		}
 		while(!(UART2->S1 & 0x20)) {}   /* wait for receive buffer full */
-		c = UART2->D ; /* read the char received */
-		LED_set(c);
+		//c = UART2->D ; /* read the char received */
+		printf("%s\n", UART2->D);
+		
+		//LED_set(c);
 	}
 }
 /* initialize all three LEDs on the FRDM board */
