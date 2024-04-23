@@ -3,17 +3,19 @@ void UART2_init(void);
 void delayMs(int n);
 
 int main (void) {
+	char message[] = "Hello\n";
 	char c;
+	int i;
 	UART2_init();
 	while (1) {
-		while(!(UART2->S1 & 0x20)) {
-			
-		}   /* wait for receive buffer full */
+		for (i = 0; i < 6; i++) {
+			while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
+			UART2->D = message[i]; /* send a char */
+		}
+		while(!(UART2->S1 & 0x20)) {}   /* wait for receive buffer full */
 		c = UART2->D ; /* read the char received */
-		while(!(UART2->S1 & 0x80)) {
-			
-		}   /* wait for transmit buffer empty */
-		UART2->D = c; /* send the char received */
+		
+		delayMs(10); /* leave a gap between messages */
 	}
 }
 
