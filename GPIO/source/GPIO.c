@@ -1,25 +1,37 @@
 #include <MKL25Z4.H>
 void UART2_init(void);
 void delayMs(int n);
+void LED_init(void);
+void LED_set(char value);
 
 int main (void) {
-	char message[] = "Hello\n";
 	char c;
-	int i;
+
+	LED_init();
 	UART2_init();
+
 	while (1) {
-		// for (i = 0; i < 6; i++) {
-		// 	while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
-		// 	UART2->D = message[i]; /* send a char */
-		// }
 		while(!(UART2->S1 & 0x20)) {}   /* wait for receive buffer full */
 		c = UART2->D ; /* read the char received */
-		printf("Switch: %c\n", c);
-
-		delayMs(10); /* leave a gap between messages */
+		LED_set(c);
 	}
 }
-
+/* initialize all three LEDs on the FRDM board */
+void LED_init(void)
+{
+	SIM->SCGC5 |= 0x400;        /* enable clock to Port B */
+	PORTB->PCR[18] = 0x100;     /* make PTB18 pin as GPIO */
+	PTB->PDDR |= 0x40000;       /* make PTB18 as output pin */
+	PTB->PSOR = 0x40000;        /* turn off red LED */
+}
+/* turn on or off the LEDs according to bit 2-0 of the value */
+void LED_set(char value)
+{
+	if (value == "1")    			/* use bit 0 of value to control red LED */
+		PTB->PCOR = 0x40000;    /* turn on red LED */
+	else
+		PTB->PSOR = 0x40000;    /* turn off red LED */
+}
 /* initialize UART2 to transmit and receive at 9600 Baud */
 void UART2_init(void) {
 	SIM->SCGC4 |= 0x1000;   /* enable clock to UART2 */
