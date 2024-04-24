@@ -58,16 +58,12 @@ void LED_init(void){
 }
 /* turn on or off the LEDs according to bit 2-0 of the value */
 void LED_set(int value){
-	if (value & 1)    			/* use bit 0 of value to control red LED */
-		PTB->PCOR = 0x40000;    /* turn on red LED */
-	else
-		PTB->PSOR = 0x40000;    /* turn off red LED */
-	if (value & 2)    			/* use bit 1 of value to control green LED */
-		PTB->PCOR = 0x80000;    /* turn on green LED */
-	else
-		PTB->PSOR = 0x80000;    /* turn off green LED */
-	if (value & 4)    			/* use bit 2 of value to control blue LED */
-		PTD->PCOR = 0x02;       /* turn on blue LED */
-	else
+	if (value & 1){   			/* use bit 0 of value to control red LED */
+		PTB->PCOR = 0xC0000;    /* turn on red LED */
+		PTD->PCOR = 0x02;		/* turn on blue LED */
+	}
+	else {
+		PTB->PSOR = 0xC0000;    /* turn off red LED */
 		PTD->PSOR = 0x02;       /* turn off blue LED */
+	}
 }
