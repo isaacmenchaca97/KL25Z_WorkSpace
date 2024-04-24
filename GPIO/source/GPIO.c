@@ -30,7 +30,7 @@ void UART0_init(void) {
 	SIM->SOPT2 |= 0x04000000;   /* use FLL output for UART Baud rate generator*/
 	UART0->C2 = 0;          /* turn off UART0 while changing configurations */
 	UART0->BDH = 0x00;
-	UART0->BDL = 0x17;      /* 115200 Baud */
+	UART0->BDL = 0x111;      /* 9600 Baud */
 	UART0->C4 = 0x0F;       /* Over Sampling Ratio 16 */
 	UART0->C1 = 0x00;       /* 8-bit data */
 	UART0->C2 = 0x08;       /* enable transmit */
