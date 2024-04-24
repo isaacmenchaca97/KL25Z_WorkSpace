@@ -1,63 +1,42 @@
+/* p4_1.c UART0 transmit
+* Sending “YES” to UART0 on Freescale FRDM-KL25Z board.
+* UART0 is connected to openSDA debug agent and has
+* a virtual connection to the host PC COM port.
+* Use TeraTerm to see the message “YES” on a PC.
+* By default in SystemInit(), FLL clock output is 41.94 MHz.
+* Setting BDH=0, BDL=0x17, and OSR=0x0F yields 115200 Baud.
+*/
 #include <MKL25Z4.H>
-void UART2_init(void);
+void UART0_init(void);
 void delayMs(int n);
-void LED_init(void);
-void LED_set(char value);
 
 int main (void) {
-	//char message[] = "AT+START";
-	char c;
-	//int i;
 
-	LED_init();
-	UART2_init();
-
+	UART0_init();
 	while (1) {
-		// for (i = 0; i < 8; i++) {
-		// 	while(!(UART2->S1 & 0x80)) {}   /* wait for transmit buffer empty */
-		// 	UART2->D = message[i]; /* send a char */
-		// }
-		while(!(UART2->S1 & 0x20)) {}   /* wait for receive buffer full */
-		c = UART2->D ; /* read the char received */
-		//printf("%s\n", UART2->D);
-		
-		//LED_set(c);
-		if (c == '1')    		/* use bit 0 of value to control red LED */
-		PTB->PCOR = 0x40000;    /* turn on red LED */
-		else
-		PTB->PSOR = 0x40000;    /* turn off red LED */
+		while(!(UART0->S1 & 0x80)) {
+		}   /* wait for transmit buffer empty */
+		UART0->D = 'Y'; /* send a char */
+		while(!(UART0->S1 & 0x80)) { }
+		UART0->D = 'e'; /* send a char */
+		while(!(UART0->S1 & 0x80)) { }
+		UART0->D = 's'; /* send a char */
+		delayMs(2); /* leave a gap between messages */
 	}
 }
-/* initialize all three LEDs on the FRDM board */
-void LED_init(void)
-{
-	SIM->SCGC5 |= 0x400;        /* enable clock to Port B */
-	PORTB->PCR[18] = 0x100;     /* make PTB18 pin as GPIO */
-	PTB->PDDR |= 0x40000;       /* make PTB18 as output pin */
-	PTB->PSOR = 0x40000;        /* turn off red LED */
+/* initialize UART0 to transmit at 115200 Baud */
+void UART0_init(void) {
+	SIM->SCGC4 |= 0x0400;   	/* enable clock for UART0 */
+	SIM->SOPT2 |= 0x04000000;   /* use FLL output for UART Baud rate generator*/
+	UART0->C2 = 0;          /* turn off UART0 while changing configurations */
+	UART0->BDH = 0x00;
+	UART0->BDL = 0x17;      /* 115200 Baud */
+	UART0->C4 = 0x0F;       /* Over Sampling Ratio 16 */
+	UART0->C1 = 0x00;       /* 8-bit data */
+	UART0->C2 = 0x08;       /* enable transmit */
+	SIM->SCGC5 |= 0x0200;   /* enable clock for PORTA */
+	PORTA->PCR[2] = 0x0200; /* make PTA2 UART0_Tx pin */
 }
-/* turn on or off the LEDs according to bit 2-0 of the value */
-void LED_set(char value)
-{
-	if (value == "1")    			/* use bit 0 of value to control red LED */
-		PTB->PCOR = 0x40000;    /* turn on red LED */
-	else
-		PTB->PSOR = 0x40000;    /* turn off red LED */
-}
-/* initialize UART2 to transmit and receive at 9600 Baud */
-void UART2_init(void) {
-	SIM->SCGC4 |= 0x1000;   /* enable clock to UART2 */
-	UART2->C2 = 0;          /* disable UART during configuration */
-	UART2->BDH = 0x00;
-	UART2->BDL = 0x5B;      /* 9600 Baud */
-	UART2->C1 = 0x00;       /* normal 8-bit, no parity */
-	UART2->C3 = 0x00;       /* no fault interrupt */
-	UART2->C2 = 0x0C;       /* enable transmit and receive */
-	SIM->SCGC5 |= 0x1000;   /* enable clock to PORTD */
-	PORTD->PCR[5] = 0x300;  /* PTD5 for UART2 transmit */
-	PORTD->PCR[4] = 0x300;  /* PTD5 for UART2 receive */
-}
-
 /* Delay n milliseconds */
 /* The CPU core clock is set to MCGFLLCLK at 41.94 MHz in SystemInit(). */
 void delayMs(int n) {
