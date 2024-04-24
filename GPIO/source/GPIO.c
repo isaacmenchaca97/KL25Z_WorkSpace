@@ -36,6 +36,7 @@ void UART0_init(void) {
 	UART0->C2 = 0x08;       /* enable transmit */
 	SIM->SCGC5 |= 0x0200;   /* enable clock for PORTA */
 	PORTA->PCR[2] = 0x0200; /* make PTA2 UART0_Tx pin */
+	PORTA->PCR[1] = 0x0200; /* make PTA1 UART0_Rx pin */
 }
 /* Delay n milliseconds */
 /* The CPU core clock is set to MCGFLLCLK at 41.94 MHz in SystemInit(). */
