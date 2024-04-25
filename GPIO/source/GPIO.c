@@ -26,7 +26,7 @@ int main (void) {
 		LED_set(c);
 	}
  }
-  /* initialize UART0 to receive at 115200 Baud */
+  /* initialize UART0 to receive at 9600 Baud */
 void UART0_init(void) {
 	SIM->SCGC4 |= 0x0400;   /* enable clock for UART0 */
 	SIM->SOPT2 |= 0x04000000;    /* use FLL output for UART Baud rate generator*/
@@ -58,12 +58,14 @@ void LED_init(void){
 }
 /* turn on or off the LEDs according to bit 2-0 of the value */
 void LED_set(int value){
-	if (value & 1){   			/* use bit 0 of value to control red LED */
-		PTB->PCOR = 0xC0000;    /* turn on red LED */
-		PTD->PCOR = 0x02;		/* turn on blue LED */
-	}
-	else {
-		PTB->PSOR = 0xC0000;    /* turn off red LED */
-		PTD->PSOR = 0x02;       /* turn off blue LED */
+	if (value != '\n'){
+		if (value & 1){   			/* use bit 0 of value to control red LED */
+			PTB->PCOR = 0xC0000;    /* turn on red LED */
+			PTD->PCOR = 0x02;		/* turn on blue LED */
+		}
+		else {
+			PTB->PSOR = 0xC0000;    /* turn off red LED */
+			PTD->PSOR = 0x02;       /* turn off blue LED */
+		}
 	}
 }
