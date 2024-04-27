@@ -133,7 +133,7 @@ static void ST7735_ExecuteCommandList(const uint8_t *addr) {
         if(ms) {
             ms = *addr++;
             if(ms == 255) ms = 500;
-            HAL_Delay(ms);
+            delayMs(ms);
         }
     }
 }
@@ -248,10 +248,10 @@ void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     ST7735_SetAddressWindow(x, y, x+w-1, y+h-1);
 
     uint8_t data[] = { color >> 8, color & 0xFF };
-    HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
+	PTB->PCOR = 0x200;        /* turn on DS */
     for(y = h; y > 0; y--) {
         for(x = w; x > 0; x--) {
-            HAL_SPI_Transmit(&ST7735_SPI_PORT, data, sizeof(data), HAL_MAX_DELAY);
+            SPI0_write(unsigned char &cmd, sizeof(cmd));
         }
     }
 
@@ -272,10 +272,10 @@ void ST7735_FillRectangleFast(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ui
     uint8_t *line = malloc(w * sizeof(pixel));
     for(x = 0; x < w; ++x)
     	memcpy(line + x * sizeof(pixel), pixel, sizeof(pixel));
-
-    HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
+	
+	PTB->PCOR = 0x200;        /* turn on DS */
     for(y = h; y > 0; y--)
-        HAL_SPI_Transmit(&ST7735_SPI_PORT, line, w * sizeof(pixel), HAL_MAX_DELAY);
+        SPI0_write(unsigned char &cmd, sizeof(cmd));
 
     free(line);
     ST7735_Unselect();
