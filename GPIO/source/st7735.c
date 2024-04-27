@@ -1,7 +1,7 @@
 /* vim: set ai et ts=4 sw=4: */
 #include <MKL25Z4.H>
 #include "st7735.h"
-#include "malloc.h"
+#include <stdlib.h>
 #include "string.h"
 
 #define DELAY 0x80
