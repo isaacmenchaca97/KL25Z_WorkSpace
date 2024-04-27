@@ -23,7 +23,11 @@ int main (void) {
 	SPI0_init();                 /* enable SPI0 */
 	UART0_init();
 	GPIO_init();
+	ST7735_FillScreen(ST7735_BLACK);
+	ST7735_WriteString(0, 0, "Font_7x10, red on black, lorem ipsum dolor sit amet", Font_7x10, ST7735_RED, ST7735_BLACK);
+	ST7735_DrawImage(0, 0, ST7735_WIDTH, ST7735_HEIGHT, (uint16_t*)test_img_128x128);
 	while (1) {
+
 		while(!(UART0->S1 & 0x20)) {}   /* wait for receive buffer full */
 		c = UART0->D; /* read the char received */
 		LED_set(c);
