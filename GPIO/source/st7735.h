@@ -15,7 +15,6 @@
 
 /*** Redefine if necessary ***/
 #define ST7735_SPI_PORT hspi1
-extern SPI_HandleTypeDef ST7735_SPI_PORT;
 
 #define ST7735_RES_Pin       GPIO_PIN_7
 #define ST7735_RES_GPIO_Port GPIOC

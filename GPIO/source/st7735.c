@@ -109,7 +109,7 @@ static void ST7735_WriteCommand(uint8_t cmd) {
 
 static void ST7735_WriteData(uint8_t* buff, size_t buff_size) {
 	PTB->PCOR = 0x200;        /* turn on DS */
-	SPI0_write(unsigned char &cmd, sizeof(cmd));
+	SPI0_write(unsigned char buff, buff_size);
 }
 
 static void ST7735_ExecuteCommandList(const uint8_t *addr) {
@@ -251,7 +251,7 @@ void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
 	PTB->PCOR = 0x200;        /* turn on DS */
     for(y = h; y > 0; y--) {
         for(x = w; x > 0; x--) {
-            SPI0_write(unsigned char &cmd, sizeof(cmd));
+            SPI0_write(unsigned char data, sizeof(data));
         }
     }
 
@@ -275,7 +275,7 @@ void ST7735_FillRectangleFast(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ui
 	
 	PTB->PCOR = 0x200;        /* turn on DS */
     for(y = h; y > 0; y--)
-        SPI0_write(unsigned char &cmd, sizeof(cmd));
+        SPI0_write(unsigned char line, w * sizeof(pixel));
 
     free(line);
     ST7735_Unselect();
